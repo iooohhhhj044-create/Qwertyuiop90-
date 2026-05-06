@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>غرفة الدردشة المشفرة</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f0f0f; color: #e0e0e0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #1e1e1e; padding: 30px; border-radius: 20px; width: 380px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.7); border: 1px solid #333; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #444; background: #2b2b2b; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #5865F2; border: none; color: white; cursor: pointer; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #4752c4; }
+        #chatRoom { display: none; width: 450px; }
+        .messages { height: 350px; background: #121212; overflow-y: auto; margin-bottom: 15px; padding: 15px; border-radius: 10px; text-align: right; border: 1px solid #333; }
+        .msg { margin-bottom: 12px; padding: 8px; border-bottom: 1px solid #222; position: relative; }
+        .admin-tag { position: absolute; left: 5px; top: 5px; color: #00ffcc; font-size: 9px; opacity: 0.6; } /* ميزتك الخاصة */
+        .user-photo { width: 100%; border-radius: 12px; margin-bottom: 15px; border: 2px solid #5865F2; }
+        .error { color: #ff4d4d; font-size: 13px; display: none; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<!-- واجهة الدخول -->
+<div id="lockScreen" class="box">
+    <h2>🔒 نظام سري</h2>
+    <p style="font-size: 14px; color: #888;">أدخل رمز التحقق المشفر</p>
+    <input type="password" id="mainPass" placeholder="رمز الدخول...">
+    <p class="error" id="error">الرمز غير صحيح!</p>
+    <button onclick="verify()">فك التشفير ودخول</button>
+</div>
+
+<!-- واجهة الدردشة -->
+<div id="chatRoom" class="box">
+    <img src="IMG_٢٠٢٦٠٣٢٠_٢٣٤٠٠٦.jpg" alt="Secret Photo" class="user-photo">
+    <div class="messages" id="msgBox">
+        <div style="color: #5865F2; font-size: 12px;">[نظام] تم تفعيل التشفير بين الطرفين.</div>
+    </div>
+    <input type="text" id="userName" placeholder="اسم مستعار...">
+    <input type="text" id="userMsg" placeholder="اكتب رسالة مشفرة...">
+    <button onclick="sendMessage()">إرسال بصيغة مجهول</button>
+</div>
+
+<script>
+    // الرمز مخفي هنا (عبارة عن أكواد أرقام لـ Abasajad)
+    const _0x4f22 = [65, 98, 97, 115, 97, 106, 97, 100]; 
+
+    function verify() {
+        const input = document.getElementById('mainPass').value;
+        const error = document.getElementById('error');
+        
+        // تحويل المدخل إلى أرقام ومقارنته بالمصفوفة المخفية
+        let isValid = input.length === _0x4f22.length && 
+                      input.split('').every((char, i) => char.charCodeAt(0) === _0x4f22[i]);
+
+        if (isValid) {
+            document.getElementById('lockScreen').style.display = 'none';
+            document.getElementById('chatRoom').style.display = 'block';
+        } else {
+            error.style.display = 'block';
+            document.getElementById('mainPass').value = "";
+        }
+    }
+
+    function sendMessage() {
+        const name = document.getElementById('userName').value || "مجهول";
+        const text = document.getElementById('userMsg').value;
+        const box = document.getElementById('msgBox');
+
+        if(text.trim() !== "") {
+            // بصمة رقمية تظهر لك فقط لتعرف المرسل (ID عشوائي يحاكي معرف الجهاز)
+            const deviceID = "DEV-" + (text.length * 7) + Math.floor(Math.random() * 100);
+            
+            const msgHtml = `
+                <div class="msg">
+                    <span class="admin-tag">${deviceID}</span>
+                    <strong>${name}:</strong> ${text}
+                </div>`;
+            
+            box.innerHTML += msgHtml;
+            document.getElementById('userMsg').value = "";
+            box.scrollTop = box.scrollHeight;
+        }
+    }
+</script>
+
+</body>
+</html>
